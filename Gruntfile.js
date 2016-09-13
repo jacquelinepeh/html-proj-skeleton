@@ -1,0 +1,254 @@
+/*
+ * boilerplate-h5bp
+ * https://github.com/assemble/boilerplate-h5bp
+ * Copyright (c) 2014, Jon Schlinkert, Brian Woodward, contributors.
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+module.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    site: grunt.file.readYAML('.assemblerc.yml'),
+    vendor: grunt.file.readJSON('.bowerrc').directory,
+    process: require('./src/js/sanitize.js'),
+
+    watch: {
+      options: {
+        livereload: true,
+        interrupt: true,
+      },
+      gruntfile: {
+        files: 'Gruntfile.js',
+        tasks: ['watchcontexthelper:gruntfile'],
+        options: {
+          nospawn: true,
+        },
+      },
+      sass: {
+      files: ['<%= site.src %>/sass/**/*.{scss,sass}'],
+        tasks: ['watchcontexthelper:sass'],
+        options: {
+          nospawn: true
+        },
+      },
+      js: {
+        files: ['<%= site.src %>/js/**/*.js'],
+        tasks: ['watchcontexthelper:js'],
+        options: {
+          nospawn: true
+        },
+      },
+      img: {
+        files: ['<%= site.src %>/images/**/*'],
+        tasks: ['watchcontexthelper:img'],
+        options: {
+          nospawn: true
+        },
+      },
+      html: {
+        files: ['<%= site.src %>/html/**/*.hbs'],
+        tasks: ['watchcontexthelper:html'],
+        options: {
+          nospawn: true
+        },
+      },
+    },
+
+    // Lint JavaScript
+    jshint: {
+      all: ['Gruntfile.js', '<%= site.helpers %>/*.js'],
+      options: {
+        jshintrc: '.jshintrc'
+      }
+    },
+
+    // Build HTML from templates and data
+    assemble: {
+      options: {
+        flatten: true,
+        assets: '<%= site.assets %>',
+        layouts: '<%= site.layouts %>',
+        layout: '<%= site.layout %>'
+      },
+      development: {
+        options: {
+          production: false,
+          partials: ['<%= site.includes %>/**/*.hbs']
+        },
+        files: [
+          {
+            expand: true,
+            cwd: '<%= site.pages %>', //ask assemble to compile the pages
+            src: ['**/*.hbs'],
+            dest: '<%= site.dest %>/html/'
+          }
+        ]
+      },
+      production: {
+        options: {
+          production: true,
+          partials: ['<%= site.includes %>/**/*.hbs']
+        },
+        files: [
+          {
+            expand: true,
+            cwd: '<%= site.pages %>', //ask assemble to compile the pages
+            src: ['**/*.hbs'],
+            dest: '<%= site.dest %>/html/'
+          }
+        ]
+      }
+      // docs: {
+      //   options: {
+      //     pages: {
+      //       toc        : {content: '{{md "tmp/content/TOC.md"}}'},
+      //       usage      : {content: '{{md "tmp/content/usage.md"}}'},
+      //       faq        : {content: '{{md "tmp/content/faq.md"}}'},
+      //       css        : {content: '{{md "tmp/content/css.md"}}'},
+      //       html       : {content: '{{md "tmp/content/html.md"}}'},
+      //       js         : {content: '{{md "tmp/content/js.md"}}'},
+      //       crossdomain: {content: '{{md "tmp/content/crossdomain.md"}}'},
+      //       extend     : {content: '{{md "tmp/content/extend.md"}}'},
+      //       misc       : {content: '{{md "tmp/content/misc.md"}}'},
+      //     }
+      //   },
+      //  files: {'<%= site.dest %>/': ['src/index.hbs'] }
+      //}
+    },
+
+    // Prettify test HTML pages from Assemble task.
+    prettify: {
+      all: {
+        files: [
+          {expand: true, cwd: '<%= site.dest %>', src: ['*.html'], dest: '<%= site.dest %>/', ext: '.html'}
+        ]
+      }
+    },
+
+    uglify: {
+      // concat and minify scripts
+    },
+
+    sass: {
+      main: {
+        files: {
+          '<%= site.dest %>/css/main.css': '<%= site.src %>/sass/main.scss'
+        },
+      },
+    },
+
+    concat: {
+      js: {
+        src: [
+          '<%= vendor %>/bootstrap-sass-twbs/assets/javascripts/bootstrap/carousel.js',
+          '<%= site.src %>/js/main.js'
+        ],
+        dest: '<%= site.dest %>/js/main.js'
+      },
+    },
+
+    // Copy H5BP files to new project, using replacement
+    // patterns to convert files into templates.
+    copy: {
+      img: {
+        files: [
+          { expand: true, cwd: '<%= site.src %>/images/', src: '**/*', dest: '<%= site.dest %>/images/' }
+        ],
+      },
+      "js-vendor": {
+        files: [
+          { expand: true, cwd: '<%= vendor %>/jquery/dist/', src: 'jquery.js', dest: '<%= site.dest %>/js/vendor' },
+          { expand: true, cwd: '<%= vendor %>/modernizr/', src: 'modernizr.js', dest: '<%= site.dest %>/js/vendor' }
+        ],
+      }
+    },
+
+    // Before generating new files remove files from previous build.
+    clean: {
+      dist: ['<%= site.dest %>'],
+      html: ['<%= site.dest %>/html/'],
+      css: ['<%= site.dest %>/css/'],
+      js: ['<%= site.dest %>/js/'],
+      "js-vendor": ['<%= site.dest %>/js/vendor'],
+      img: ['<%= site.dest %>/images/']
+    }
+  });
+
+  // Load npm plugins to provide necessary tasks.
+  grunt.loadNpmTasks('assemble');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-prettify');
+  grunt.loadNpmTasks('grunt-verb');
+
+  grunt.registerTask('watchcontexthelper', function (target){
+    switch (target) {
+      case 'gruntfile':
+        var child;
+
+        var showDone = function(){
+          console.log('Done');
+        }
+
+        if (grunt.watchcontext === 'production') {
+          child = grunt.util.spawn({ grunt: true, args: ['production'] }, showDone);
+        } else {
+          child = grunt.util.spawn({ grunt: true, args: ['development'] }, showDone);
+        }
+
+        child.stdout.pipe(process.stdout);
+        child.stderr.pipe(process.stderr);
+        break;
+      case 'js':
+        (grunt.watchcontext === 'production') ?
+        grunt.task.run(['clean:js', 'concat', 'uglify', 'clean:devjs']) :
+        grunt.task.run(['clean:js', 'concat']);
+        break;
+      case 'img':
+        (grunt.watchcontext === 'production') ?
+        grunt.task.run(['clean:img', 'copy:img']) :
+        grunt.task.run(['clean:img', 'copy:img']);
+        break;
+      case 'html':
+        (grunt.watchcontext === 'production') ?
+        grunt.task.run(['clean:html', 'assemble:production']) :
+        grunt.task.run(['clean:html', 'assemble:development']);
+        break;
+      case 'sass':
+        (grunt.watchcontext === 'production') ?
+        grunt.task.run(['clean:css', 'sass', 'cssmin', 'clean:devcss']) :
+        grunt.task.run(['clean:css', 'sass']);
+        break;
+    }
+  });
+
+  // Default tasks to be run.
+  grunt.registerTask('default', [
+    'clean:dist',
+    'copy:img',
+    'copy:js-vendor',
+    'concat',
+    'sass',
+    'assemble:development'
+    //'prettify'
+  ]);
+
+  grunt.registerTask('development', [
+    'default'
+  ]);
+
+  grunt.registerTask('production', [
+    'default'
+  ]);
+
+  // Linting and tests.
+  grunt.registerTask('test', ['clean', 'jshint']);
+};
