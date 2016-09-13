@@ -1,0 +1,11 @@
+// Convert px to em
+@function pxtoem($target, $context: $baseFontSizeInteger) {
+	@return ($target/$context)+0em;
+}
+
+// IE7 inline-block
+// ----------------
+@mixin ie7-inline-block() {
+  *display: inline; /* IE7 inline-block hack */
+  *zoom: 1;
+}

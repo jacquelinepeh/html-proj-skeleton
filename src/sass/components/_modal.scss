@@ -1,0 +1,97 @@
+.modal-dialog {
+  margin-top: 70px;
+  width: 920px !important;
+}
+
+.modal-content {
+  border-radius: 0;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: none;
+
+  > img {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .close {
+    background: url('../images/modal-close.png') no-repeat left top;
+    height: 46px;
+    width: 46px;
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+
+    margin-top: -35px;
+    margin-right: -35px;
+
+    &:hover, &:focus {
+      opacity: 1;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    }
+  }
+}
+
+.modal-footer {
+  border-top: none;
+
+  > img {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.modal-backdrop {
+  bottom: 0;
+}
+
+.modal-body {
+  padding: 15px 50px;
+
+  .tnc-line {
+    border-bottom: 2px solid #ed1a3b;
+    padding-bottom: 10px;
+    margin-bottom: 0px;
+  }
+
+  .accordion-title {
+    text-transform: uppercase;
+    color: #ed1a3b;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+
+    .icon {
+      background: url('../images/icon-accordion.png') no-repeat left top;
+      display: inline-block;
+      zoom: 1;
+      *display: inline;
+      width: 13px;
+      height: 6px;
+      margin-left: 10px;
+      margin-bottom: 2px;
+    }
+
+    &:hover, &:focus {
+      text-decoration: none;
+    }
+  }
+
+  .accordion-set {
+    border-bottom: 1px solid #ed1a3b;
+    padding-top: 10px;
+
+    .tnc {
+      color: #8a8a8a;
+    }
+  }
+
+  .collapse {
+    padding-bottom: 10px;
+  }
+}

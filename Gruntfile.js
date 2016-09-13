@@ -84,7 +84,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: '<%= site.pages %>', //ask assemble to compile the pages
             src: ['**/*.hbs'],
-            dest: '<%= site.dest %>/html/'
+            dest: '<%= site.dest %>/'
           }
         ]
       },
@@ -98,7 +98,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: '<%= site.pages %>', //ask assemble to compile the pages
             src: ['**/*.hbs'],
-            dest: '<%= site.dest %>/html/'
+            dest: '<%= site.dest %>/'
           }
         ]
       }
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
     // Before generating new files remove files from previous build.
     clean: {
       dist: ['<%= site.dest %>'],
-      html: ['<%= site.dest %>/html/'],
+      html: ['<%= site.dest %>/*.html'],
       css: ['<%= site.dest %>/css/'],
       js: ['<%= site.dest %>/js/'],
       // "js-vendor": ['<%= site.dest %>/js/vendor'],
@@ -165,9 +165,9 @@ module.exports = function(grunt) {
   // Load npm plugins to provide necessary tasks.
   grunt.loadNpmTasks('grunt-assemble');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  // grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  // grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   // grunt.loadNpmTasks('grunt-prettify');
@@ -217,12 +217,11 @@ module.exports = function(grunt) {
   // Default tasks to be run.
   grunt.registerTask('default', [
     'clean:dist',
-    // 'copy:img',
+    'copy:img',
     // 'copy:js-vendor',
-    // 'concat',
-    // 'sass',
+    'concat',
+    'sass',
     'assemble:development'
-    //'prettify'
   ]);
 
   grunt.registerTask('development', [
