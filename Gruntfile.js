@@ -29,7 +29,7 @@ module.exports = function(grunt) {
         },
       },
       sass: {
-      files: ['<%= site.src %>/sass/**/*.{scss,sass}'],
+        files: ['<%= site.src %>/sass/**/*.{scss,sass}'],
         tasks: ['watchcontexthelper:sass'],
         options: {
           nospawn: true
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
         files: ['<%= site.src %>/js/**/*.js'],
         tasks: ['watchcontexthelper:js'],
         options: {
-          nospawn: true
+          nospawn: false
         },
       },
       img: {
@@ -53,14 +53,14 @@ module.exports = function(grunt) {
         files: ['<%= site.src %>/html/**/*.hbs'],
         tasks: ['watchcontexthelper:html'],
         options: {
-          nospawn: true
+          nospawn: false
         },
       },
     },
 
     // Lint JavaScript
     jshint: {
-      all: ['Gruntfile.js', '<%= site.helpers %>/*.js'],
+      all: ['<%= site.src %>/js/*.js'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -102,22 +102,6 @@ module.exports = function(grunt) {
           }
         ]
       }
-      // docs: {
-      //   options: {
-      //     pages: {
-      //       toc        : {content: '{{md "tmp/content/TOC.md"}}'},
-      //       usage      : {content: '{{md "tmp/content/usage.md"}}'},
-      //       faq        : {content: '{{md "tmp/content/faq.md"}}'},
-      //       css        : {content: '{{md "tmp/content/css.md"}}'},
-      //       html       : {content: '{{md "tmp/content/html.md"}}'},
-      //       js         : {content: '{{md "tmp/content/js.md"}}'},
-      //       crossdomain: {content: '{{md "tmp/content/crossdomain.md"}}'},
-      //       extend     : {content: '{{md "tmp/content/extend.md"}}'},
-      //       misc       : {content: '{{md "tmp/content/misc.md"}}'},
-      //     }
-      //   },
-      //  files: {'<%= site.dest %>/': ['src/index.hbs'] }
-      //}
     },
 
     // Prettify test HTML pages from Assemble task.
@@ -144,7 +128,7 @@ module.exports = function(grunt) {
     concat: {
       js: {
         src: [
-          '<%= vendor %>/bootstrap-sass-twbs/assets/javascripts/bootstrap/carousel.js',
+          // '<%= vendor %>/bootstrap-sass-twbs/assets/javascripts/bootstrap/carousel.js',
           '<%= site.src %>/js/main.js'
         ],
         dest: '<%= site.dest %>/js/main.js'
@@ -173,21 +157,21 @@ module.exports = function(grunt) {
       html: ['<%= site.dest %>/html/'],
       css: ['<%= site.dest %>/css/'],
       js: ['<%= site.dest %>/js/'],
-      "js-vendor": ['<%= site.dest %>/js/vendor'],
+      // "js-vendor": ['<%= site.dest %>/js/vendor'],
       img: ['<%= site.dest %>/images/']
     }
   });
 
   // Load npm plugins to provide necessary tasks.
-  grunt.loadNpmTasks('assemble');
+  grunt.loadNpmTasks('grunt-assemble');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-sass');
+  // grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  // grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-prettify');
-  grunt.loadNpmTasks('grunt-verb');
+  // grunt.loadNpmTasks('grunt-prettify');
+  // grunt.loadNpmTasks('grunt-verb');
 
   grunt.registerTask('watchcontexthelper', function (target){
     switch (target) {
@@ -233,10 +217,10 @@ module.exports = function(grunt) {
   // Default tasks to be run.
   grunt.registerTask('default', [
     'clean:dist',
-    'copy:img',
-    'copy:js-vendor',
-    'concat',
-    'sass',
+    // 'copy:img',
+    // 'copy:js-vendor',
+    // 'concat',
+    // 'sass',
     'assemble:development'
     //'prettify'
   ]);
@@ -246,7 +230,13 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('production', [
-    'default'
+    'clean:dist',
+    // 'copy:img',
+    // 'copy:js-vendor',
+    // 'concat',
+    // 'sass',
+    'assemble:production'
+    //'prettify'
   ]);
 
   // Linting and tests.

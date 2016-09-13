@@ -1,0 +1,15 @@
+# =============================================
+# PROJECT METADATA
+# =============================================
+
+
+dest:              dist
+assets:            <%= site.dest %>/assets
+
+# Templates
+src:               src
+templates:         <%= site.src %>/html
+pages:             <%= site.templates %>/pages
+includes:          <%= site.templates %>/partials
+layouts:           <%= site.templates %>/layouts
+layout:            default.hbs
