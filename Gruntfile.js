@@ -115,6 +115,14 @@ module.exports = function(grunt) {
 
     uglify: {
       // concat and minify scripts
+      scripts: {
+        options: {
+          mangle: false
+        },
+        files: {
+          '<%= site.dest %>/js/main.min.js': ['<%= site.src %>/js/main.js']
+        }
+      }
     },
 
     sass: {
@@ -170,6 +178,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   // grunt.loadNpmTasks('grunt-prettify');
   // grunt.loadNpmTasks('grunt-verb');
 
@@ -230,10 +239,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('production', [
     'clean:dist',
-    // 'copy:img',
+    'copy:img',
     // 'copy:js-vendor',
-    // 'concat',
-    // 'sass',
+    'uglify',
+    'sass',
     'assemble:production'
     //'prettify'
   ]);
